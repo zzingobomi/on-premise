@@ -219,6 +219,7 @@ nano inventory/mycluster/group_vars/k8s_cluster/k8s-cluster.yml
 ```
 
 ```yaml
+cluster_name: virtual-box
 kube_proxy_strict_arp: true
 ```
 
@@ -234,23 +235,58 @@ sudo cp /etc/kubernetes/admin.conf ~/.kube/config
 sudo chown $USER:$USER ~/.kube/config
 ```
 
+### cluster 삭제
+
+```bash
+ansible-playbook -v -i inventory/mycluster/inventory.ini reset.yml --become --become-user=root
+```
+
 ### nginx-ingress 설치
 
 - kubespray addon ingress 에서는 service 가 만들어지지 않아 LoadBalancer 타입의 controller 가 만들어지지 않으므로 helm 으로 설치한다
 - https://kubernetes.github.io/ingress-nginx/deploy/
 
-```
+```bash
 helm upgrade --install ingress-nginx ingress-nginx \
   --repo https://kubernetes.github.io/ingress-nginx \
   --namespace ingress-nginx --create-namespace
 ```
 
-### TODO
+### Longhorn 설치
 
-- cluster name 세팅
-  - nano inventory/mycluster/group_vars/k8s_cluster/k8s-cluster.yml
-  - cluster_name: my-cluster-name
-  - https://github.com/kubernetes-sigs/kubespray/blob/master/docs/ansible/vars.md
+```bash
+helm repo add longhorn https://charts.longhorn.io
+helm repo update
+helm install longhorn longhorn/longhorn --namespace longhorn-system --create-namespace
+```
+
+### Postgres-operator
+
+- https://github.com/zalando/postgres-operator
+
+```bash
+# add repo for postgres-operator
+helm repo add postgres-operator-charts https://opensource.zalando.com/postgres-operator/charts/postgres-operator
+
+# install the postgres-operator
+helm install postgres-operator postgres-operator-charts/postgres-operator
+
+# add repo for postgres-operator-ui
+helm repo add postgres-operator-ui-charts https://opensource.zalando.com/postgres-operator/charts/postgres-operator-ui
+
+# install the postgres-operator-ui
+helm install postgres-operator-ui postgres-operator-ui-charts/postgres-operator-ui
+```
+
+- 추후 operator 를 이용해서 postgres 다시 설치 예정
+
+### Tip
+
 - cluster addon 수정
   - ansible-playbook -v -i inventory/mycluster/inventory.ini cluster.yml --become --become-user=root --tags apps,ingress-controller,metallb
   - https://github.com/kubernetes-sigs/kubespray/blob/master/docs/ansible/ansible.md#ansible-tags
+
+### TODO
+
+- delivery MSA 구축
+- argocd 적용
