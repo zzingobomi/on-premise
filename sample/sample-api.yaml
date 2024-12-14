@@ -16,9 +16,17 @@ spec:
     spec:
       containers:
         - name: api-container
-          image: oguzpastirmaci/hostname
+          image: nginx
           ports:
-            - containerPort: 8000
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-config
 ---
 apiVersion: v1
 kind: Service
@@ -30,4 +38,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8000
+      targetPort: 80
