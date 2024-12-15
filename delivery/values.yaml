@@ -1,0 +1,22 @@
+gateway:
+  replicas: 1
+
+notification:
+  replicas: 1
+  db_url: "mongodb://foo:bar@example.com/notification?authSource=admin"
+
+order:
+  replicas: 1
+  db_url: "mongodb://foo:bar@example.com/order?authSource=admin"
+
+payment:
+  replicas: 1
+  db_url: "postgresql://foo:bar@example.com:15432/payment"
+
+product:
+  replicas: 1
+  db_url: "postgresql://foo:bar@example.com:15432/product"
+
+user:
+  replicas: 1
+  db_url: "postgresql://foo:bar@example.com:15432/user"

@@ -340,6 +340,8 @@ kubectl port-forward -n monitoring svc/kube-prometheus-stack-grafana 3000:80
 
 # https://grafana.com/grafana/dashboards
 # Node Export Full(1860) 대시보드를 통해 CPU, MEM, DISK 사용량 확인
+
+# 그라파나 LoadBalancer 추가하기
 ```
 
 ### Loki-Stack 설치
@@ -358,7 +360,6 @@ helm upgrade --install loki-stack --namespace=monitoring grafana/loki-stack --se
 URL: http://loki-stack:3100
 
 # Home > Explore > loki
-# pod 선택해서 로그 확인해보기
-# MSA 구축후에 로그 실제로 잘 나오는지 확인할것
+# delivery MSA 기준으로 파드의 로그 정상 출력 확인
 # 추후 Longhorn 에 저장 세팅해서 persistence 유지되는지 확인할것
 ```
