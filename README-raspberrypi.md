@@ -341,3 +341,24 @@ kubectl port-forward -n monitoring svc/kube-prometheus-stack-grafana 3000:80
 # https://grafana.com/grafana/dashboards
 # Node Export Full(1860) 대시보드를 통해 CPU, MEM, DISK 사용량 확인
 ```
+
+### Loki-Stack 설치
+
+- loki-stack 이 더이상 유지되지 않고 그냥 loki 로 유지되고 있는듯하다.
+- 그냥 loki는 3버전으로 여러모드로 설치가 가능하다
+- 여기서는 그냥 loki-stack 으로 설치한다. 그러나 2.6.X 버전은 kube-prometheus-stack grafana 와 연동되지 않는 이슈가 있다.
+- https://community.grafana.com/t/grafana-unable-to-connect-with-loki-please-check-the-server-logs-for-more-details/119757/5
+- loki image를 2.9.3 으로 설치해야 데이터 소스가 연결된다.
+
+```bash
+helm upgrade --install loki-stack --namespace=monitoring grafana/loki-stack --set loki.image.tag=2.9.3
+
+# grafana 연결
+# Connections > Data sources > loki
+URL: http://loki-stack:3100
+
+# Home > Explore > loki
+# pod 선택해서 로그 확인해보기
+# MSA 구축후에 로그 실제로 잘 나오는지 확인할것
+# 추후 Longhorn 에 저장 세팅해서 persistence 유지되는지 확인할것
+```
