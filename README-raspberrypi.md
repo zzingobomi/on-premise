@@ -363,3 +363,46 @@ URL: http://loki-stack:3100
 # delivery MSA 기준으로 파드의 로그 정상 출력 확인
 # 추후 Longhorn 에 저장 세팅해서 persistence 유지되는지 확인할것
 ```
+
+### Domain 연결
+
+- AWS Route53 에서 하위 도메인을 만들고 라우팅 대상을 우리집 공인아이피로 세팅한다.
+- iptime 포트포워딩을 ingress ip 주소로 세팅한다.
+
+### ArgoCD 설치
+
+```bash
+helm repo add argo https://argoproj.github.io/argo-helm
+
+# TLS 설정 비활성화
+# ingress 관련 세팅
+# argocd/values-override.yaml 참고
+helm install argocd argo/argo-cd -n argocd -f argocd/values-override.yaml --create-namespace
+
+# 초기 비밀번호 확인
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d
+
+# admin // xxxxx
+# 로그인후 비밀번호 변경
+
+# Application -> NEW APP
+# Project Name: default (default 가 아니면 여러가지 권한을 설정해 줘야 한다. 귀찮으니 추후에 알아보자)
+# SOURCE
+  # Repository URL: https://github.com/zzingobomi/on-premise
+  # Revision: main
+  # Path: delivery
+# DESTINATION
+  # Cluster URL: https://kubernetes.default.svc (동일 클러스터를 가리키는 주소)
+  # Namespace: default (다른 네임스페이스라면 다른 이름으로 지정)
+# Directory -> Helm 으로 변경
+  # 각 values 에 맞는지 확인. 다르다면 수정
+```
+
+### ArgoCD Image Updator 설치
+
+### ArgoCD Rollout 설치
+
+### TODO
+
+- grafana ingress 적용
+- TLS 적용

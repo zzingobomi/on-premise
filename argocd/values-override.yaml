@@ -1,0 +1,11 @@
+global:
+  domain: "argocd.practice-zzingo.net"
+configs:
+  params:
+    server.insecure: true
+server:
+  ingress:
+    enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    ingressClassName: nginx

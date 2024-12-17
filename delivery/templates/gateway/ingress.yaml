@@ -1,13 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: gateway-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: gateway-ingress  
 spec:
   ingressClassName: nginx
   rules:
-    - http:
+    - host: api.practice-zzingo.net
+      http:
         paths:
           - path: /
             pathType: Prefix
