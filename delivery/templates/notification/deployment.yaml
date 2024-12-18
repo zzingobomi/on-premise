@@ -20,7 +20,7 @@ spec:
         app: notification
     spec:
       containers:
-        - image: zzingo5/fc-nestjs-notification:latest
+        - image: {{ .Values.notification.image.repository }}:{{ .Values.notification.image.tag }}
           name: notification-container
           envFrom:
             - configMapRef:

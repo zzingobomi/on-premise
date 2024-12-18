@@ -20,7 +20,7 @@ spec:
         app: order
     spec:
       containers:
-        - image: zzingo5/fc-nestjs-order:latest
+        - image: {{ .Values.order.image.repository }}:{{ .Values.order.image.tag }}
           name: order-container
           envFrom:
             - configMapRef:

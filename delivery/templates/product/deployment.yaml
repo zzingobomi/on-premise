@@ -20,7 +20,7 @@ spec:
         app: product
     spec:
       containers:
-        - image: zzingo5/fc-nestjs-product:latest
+        - image: {{ .Values.product.image.repository }}:{{ .Values.product.image.tag }}
           name: product-container
           envFrom:
             - configMapRef:

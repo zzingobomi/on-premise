@@ -400,6 +400,50 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.pas
 
 ### ArgoCD Image Updator 설치
 
+```bash
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj-labs/argocd-image-updater/stable/manifests/install.yaml
+```
+
+```bash
+# gateway
+argocd-image-updater.argoproj.io/fc-nestjs-gateway.allow-tags             = ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$
+argocd-image-updater.argoproj.io/fc-nestjs-gateway.helm.image-name        = gateway.image.repository
+argocd-image-updater.argoproj.io/fc-nestjs-gateway.helm.image-tag         = gateway.image.tag
+argocd-image-updater.argoproj.io/fc-nestjs-gateway.update-strategy        = name
+
+# notification
+argocd-image-updater.argoproj.io/fc-nestjs-notification.allow-tags        = ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$
+argocd-image-updater.argoproj.io/fc-nestjs-notification.helm.image-name   = notification.image.repository
+argocd-image-updater.argoproj.io/fc-nestjs-notification.helm.image-tag    = notification.image.tag
+argocd-image-updater.argoproj.io/fc-nestjs-notification.update-strategy   = name
+
+# order
+argocd-image-updater.argoproj.io/fc-nestjs-order.allow-tags               = ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$
+argocd-image-updater.argoproj.io/fc-nestjs-order.helm.image-name          = order.image.repository
+argocd-image-updater.argoproj.io/fc-nestjs-order.helm.image-tag           = order.image.tag
+argocd-image-updater.argoproj.io/fc-nestjs-order.update-strategy          = name
+
+# payment
+argocd-image-updater.argoproj.io/fc-nestjs-payment.allow-tags             = ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$
+argocd-image-updater.argoproj.io/fc-nestjs-payment.helm.image-name        = payment.image.repository
+argocd-image-updater.argoproj.io/fc-nestjs-payment.helm.image-tag         = payment.image.tag
+argocd-image-updater.argoproj.io/fc-nestjs-payment.update-strategy        = name
+
+# product
+argocd-image-updater.argoproj.io/fc-nestjs-product.allow-tags             = ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$
+argocd-image-updater.argoproj.io/fc-nestjs-product.helm.image-name        = product.image.repository
+argocd-image-updater.argoproj.io/fc-nestjs-product.helm.image-tag         = product.image.tag
+argocd-image-updater.argoproj.io/fc-nestjs-product.update-strategy        = name
+
+# user
+argocd-image-updater.argoproj.io/fc-nestjs-user.allow-tags                = ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$
+argocd-image-updater.argoproj.io/fc-nestjs-user.helm.image-name           = user.image.repository
+argocd-image-updater.argoproj.io/fc-nestjs-user.helm.image-tag            = user.image.tag
+argocd-image-updater.argoproj.io/fc-nestjs-user.update-strategy           = name
+
+argocd-image-updater.argoproj.io/image-list                               = fc-nestjs-gateway=zzingo5/fc-nestjs-gateway,fc-nestjs-notification=zzingo5/fc-nestjs-notification,fc-nestjs-order=zzingo5/fc-nestjs-order,fc-nestjs-payment=zzingo5/fc-nestjs-payment,fc-nestjs-product=zzingo5/fc-nestjs-product,fc-nestjs-user=zzingo5/fc-nestjs-user
+```
+
 ### ArgoCD Rollout 설치
 
 ### TODO

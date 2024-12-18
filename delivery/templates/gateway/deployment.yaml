@@ -20,7 +20,7 @@ spec:
         app: gateway
     spec:
       containers:
-        - image: zzingo5/fc-nestjs-gateway:latest
+        - image: {{ .Values.gateway.image.repository }}:{{ .Values.gateway.image.tag }}
           name: gateway-container
           envFrom:
             - configMapRef:

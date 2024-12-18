@@ -20,7 +20,7 @@ spec:
         app: payment
     spec:
       containers:
-        - image: zzingo5/fc-nestjs-payment:latest
+        - image: {{ .Values.payment.image.repository }}:{{ .Values.payment.image.tag }}
           name: payment-container
           envFrom:
             - configMapRef:

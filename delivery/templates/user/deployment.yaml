@@ -20,7 +20,7 @@ spec:
         app: user
     spec:
       containers:
-        - image: zzingo5/fc-nestjs-user:latest
+        - image: {{ .Values.user.image.repository }}:{{ .Values.user.image.tag }}
           name: user-container
           envFrom:
             - configMapRef:
