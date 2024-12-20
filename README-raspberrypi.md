@@ -457,6 +457,8 @@ helm install argorollout argo/argo-rollouts -n argocd
 
 ### TODO
 
+- argocd 배포 전략 데모 통해서 연습해보기
+  - https://github.com/argoproj/rollouts-demo
 - HPA (Argocd 와 연동해서)
 - grafana ingress 적용
 - TLS 적용
