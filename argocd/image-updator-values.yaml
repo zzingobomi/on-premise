@@ -1,0 +1,12 @@
+config:
+  argocd:
+    serverAddress: "https://argo-cd-argocd-server"
+
+  logLevel: debug
+
+  registries:
+    - name: Docker Hub
+      api_url: https://registry-1.docker.io
+      # ping: yes
+      # credentials: secret:foo/bar#creds
+      # defaultns: library
