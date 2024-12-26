@@ -1,0 +1,25 @@
+- name: Find the designated host
+  set_fact:
+    control_plane_host: "{{ groups['control_plane'][0] }}"
+
+- name: Get the microk8s join command from the microk8s control plane
+  shell: "microk8s add-node | grep -E -m1 'microk8s join {{ hostvars[groups['control_plane'][0]].ansible_default_ipv4.address }}'"
+  delegate_to: "{{ control_plane_host }}"
+  delegate_facts: true
+  changed_when: false
+  register: microk8s_join_command
+
+- name: Get microk8s cluster nodes
+  command: "microk8s kubectl get node"
+  delegate_to: "{{ control_plane_host }}"
+  delegate_facts: true
+  changed_when: false
+  register: microk8s_cluster_node
+
+- name: Set the microk8s join command on the microk8s node
+  command: "{{ microk8s_join_command.stdout }} --worker"
+  when: microk8s_cluster_node.stdout.find(inventory_hostname) == -1
+  register: join_command_output
+  failed_when:
+    - "'already known to dqlite' not in join_command_output.stdout"
+    - join_command_output.rc > 0

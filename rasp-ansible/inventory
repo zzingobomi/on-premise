@@ -1,0 +1,10 @@
+[control_plane]
+hori1 ansible_user=hori1
+
+[workers]
+hori2 ansible_user=hori2
+hori3 ansible_user=hori3
+
+[all:children]
+control_plane
+workers

@@ -1,0 +1,10 @@
+---
+- import_tasks: install.yaml
+
+- name: configure control plane
+  include_tasks: control_plane.yaml
+  when: inventory_hostname in groups['control_plane']
+
+- name: configure workers
+  include_tasks: worker.yaml
+  when: inventory_hostname in groups['workers']

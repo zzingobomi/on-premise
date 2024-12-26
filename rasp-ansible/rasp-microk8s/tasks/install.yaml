@@ -1,0 +1,158 @@
+- name: "Update apt cache"
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Update hosts file with hostname and IP
+  become: true
+  blockinfile:
+    dest: /etc/hosts
+    marker: "# {mark} ANSIBLE MANAGED: microk8s cluster hosts"
+    content: |
+      {% for host in groups['all'] %}
+      {{ hostvars[host].ansible_default_ipv4.address }} {{ hostvars[host].ansible_hostname }}
+      {% endfor %}
+
+# kenel 업데이트 가능한지 확인하기
+- name: "Install linux-modules-extra-5.15.0-1061-raspi"
+  become: true
+  ansible.builtin.apt:
+    name: linux-modules-extra-5.15.0-1061-raspi
+    state: present
+    update_cache: true
+
+- name: "Install ntp"
+  become: true
+  ansible.builtin.apt:
+    name: ntp
+    state: latest
+    update_cache: true
+
+- name: "Syncronize date"
+  become: true
+  shell:
+    cmd: ntpq -p
+
+- name: "Restart ntp service"
+  become: true
+  service:
+    name: ntp
+    state: restarted
+    enabled: true
+
+- name: "Install nfs-common"
+  become: true
+  ansible.builtin.apt:
+    name: nfs-common
+    state: latest
+    update_cache: true
+
+- name: "Install open-iscsi"
+  become: true
+  ansible.builtin.apt:
+    name: open-iscsi
+    state: latest
+    update_cache: true
+
+- name: "Restart iscsid service"
+  become: true
+  service:
+    name: iscsid
+    state: restarted
+    enabled: true
+
+- name: Make sure snapd is installed
+  become: yes
+  package:
+    name:
+      - snapd
+    state: latest
+
+- name: Install microk8s
+  become: yes
+  snap:
+    name: microk8s
+    classic: yes
+    channel: "{{ microk8s_version }}"
+
+- name: Wait for microk8s to be ready
+  become: yes
+  command: "microk8s.status --wait-ready"
+  changed_when: false
+  register: mk8sstatusout
+  failed_when:
+    - "'This MicroK8s deployment is acting as a node in a cluster.' not in mk8sstatusout.stdout_lines"
+    - mk8sstatusout.rc > 0
+
+- name: Create kubectl alias
+  become: yes
+  command: "snap alias microk8s.kubectl kubectl"
+  changed_when: false
+  register: aliaskubectlout
+
+- name: Create helm3 alias
+  become: yes
+  command: "snap alias microk8s.helm3 helm"
+  changed_when: false
+  register: aliashelmout
+  when:
+    - "'helm3' in microk8s_plugins"
+    - microk8s_plugins.helm3
+
+- name: Add user to microk8s group
+  become: yes
+  user:
+    name: "{{ ansible_user }}"
+    groups: microk8s
+    append: yes
+
+- name: Create .kube folder for the user
+  become: yes
+  become_user: "{{ ansible_user }}"
+  file:
+    path: "/home/{{ ansible_user }}/.kube"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0750
+
+- name: create kubectl config
+  become: yes
+  changed_when: true
+  shell: microk8s config > /home/{{ ansible_user }}/.kube/config
+  args:
+    executable: /bin/bash
+
+- name: reaffirm permission on files
+  become: yes
+  file:
+    path: "/home/{{ ansible_user }}/.kube"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    recurse: yes
+    mode: 0750
+
+- name: add helm repository to user
+  become: yes
+  become_user: "{{ ansible_user }}"
+  shell: "helm repo add stable https://charts.helm.sh/stable"
+  args:
+    executable: /bin/bash
+  changed_when: true
+
+- name: update helm repos
+  become: yes
+  become_user: "{{ ansible_user }}"
+  shell: "helm repo update"
+  args:
+    executable: /bin/bash
+  changed_when: true
+
+- name: Disable snap autoupdate
+  become: true
+  blockinfile:
+    dest: /etc/hosts
+    marker: "# {mark} ANSIBLE MANAGED: microk8s Disable snap autoupdate"
+    content: |
+      127.0.0.1 api.snapcraft.io
