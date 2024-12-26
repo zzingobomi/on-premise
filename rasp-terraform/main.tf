@@ -44,3 +44,39 @@ resource "helm_release" "loki_stack" {
     value = "2.9.3"
   }
 }
+
+resource "helm_release" "argocd" {
+  name             = "argocd"
+  chart            = "${path.module}/local-charts/argo-cd"
+  namespace        = "argocd"
+  create_namespace = true
+
+  values = [
+    file("${path.module}/local-charts/argo-cd/values-dev.yaml")
+  ]
+}
+
+resource "helm_release" "argocd_image_updater" {
+  name             = "argocd-image-updater"
+  chart            = "${path.module}/local-charts/argocd-image-updater"
+  namespace        = "argocd"
+  create_namespace = true
+
+  values = [
+    file("${path.module}/local-charts/argocd-image-updater/values-dev.yaml")
+  ]
+}
+
+resource "helm_release" "argo_rollouts" {
+  name             = "argo-rollouts"
+  chart            = "${path.module}/local-charts/argo-rollouts"
+  namespace        = "argocd"
+  create_namespace = true
+}
+
+module "application" {
+  source = "./application"
+
+  argocd_password = var.argocd_password
+  delivery_values = var.delivery_values  
+}

@@ -64,12 +64,15 @@ ansible-playbook playbook.yaml -v
 ```bash
 cd rasp-terraform
 terraform init
-terraform apply -var='grafana_admin_password=password' -auto-approve
+terraform apply -var-file=dev.tfvars -auto-approve
 ```
 
 ### TODO
 
-- metallb ipvs 설정 확인
+- jq 설치
+- sudo modprobe iscsi_tcp
+- metallb ipvs 설정, strictARP 확인
+- terraform 반복되는 구문 최적화 하기
 
 ### 참고
 
