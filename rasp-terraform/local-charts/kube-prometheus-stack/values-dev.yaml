@@ -1,0 +1,7 @@
+grafana:
+  defaultDashboardsTimezone: Asia/Seoul
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - grafana.practice-zzingo.net

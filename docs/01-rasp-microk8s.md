@@ -64,7 +64,7 @@ ansible-playbook playbook.yaml -v
 ```bash
 cd rasp-terraform
 terraform init
-terraform apply
+terraform apply -var='grafana_admin_password=password' -auto-approve
 ```
 
 ### TODO
