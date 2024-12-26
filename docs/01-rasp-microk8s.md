@@ -73,6 +73,7 @@ terraform apply -var-file=dev.tfvars -auto-approve
 - sudo modprobe iscsi_tcp
 - metallb ipvs 설정, strictARP 확인
 - terraform 반복되는 구문 최적화 하기
+- istio 세팅 istio-base, istiod, istio-ingress 로 이름 바꿔도 되는지 테스트 (각각 base, istiod, gateway 로 받아졌음)
 
 ### 참고
 
