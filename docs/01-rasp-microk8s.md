@@ -55,6 +55,12 @@ ansible all -m ping
 ansible-playbook playbook.yaml -v
 ```
 
+### Pre Requirement 확인
+
+```bash
+curl -sSfL https://raw.githubusercontent.com/longhorn/longhorn/v1.7.2/scripts/environment_check.sh | bash
+```
+
 ### Terraform
 
 - microk8s ingress 는 생성시 자동으로 metallb의 address pool 을 가져오지 않는다. (defualt 127.0.0.1)
@@ -65,15 +71,24 @@ ansible-playbook playbook.yaml -v
 cd rasp-terraform
 terraform init
 terraform apply -var-file=dev.tfvars -auto-approve
+
+# 초기 비밀번호 확인
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d
 ```
 
 ### TODO
 
-- jq 설치
-- sudo modprobe iscsi_tcp
-- metallb ipvs 설정, strictARP 확인
+- 왜 처음에 한번 설치할때 한번에 성공하지 못하지?
+- 여러번 terraform apply 하면 성공하긴 하는데.. 리소스 문제인가? 타이밍 이슈인가?
+- 실행을 한번에 한꺼번에 하지 말고 나눠서 할 수 있을까?
+- dashboard login skip
+- argocd 최초 설치후 비밀번호를 UI 들어가서 가져와야 하는 이슈
+- node taint 설정하기
 - terraform 반복되는 구문 최적화 하기
 - istio 세팅 istio-base, istiod, istio-ingress 로 이름 바꿔도 되는지 테스트 (각각 base, istiod, gateway 로 받아졌음)
+- 기본 쿠버네티스 metallb 는 kube-proxy에 ipvs, strictARP 설정을 해야한다는데 microk8s는 kube-proxy가 따로 없고 다른것과 통합된듯
+- ipvs, strictARP 확인은 못했지만 아마 기본값인듯
+- 우선 addon의 metallb 를 사용하고 추후 알아보기로 결정
 
 ### 참고
 
@@ -94,6 +109,17 @@ sudo mount -t nfs 192.168.0.4:/volume1/backup /mnt/synology
 
 ```bash
 sudo rsync -aAXv --delete --exclude=/dev/* --exclude=/proc/* --exclude=/sys/* --exclude=/tmp/* --exclude=/run/* --exclude=/mnt/* --exclude=/media/* --exclude="swapfile" --exclude="lost+found" --exclude=".cache" / /mnt/synology/hori3/init
+```
+
+### Microk8s 초기화
+
+- 현재 라즈베리파이 재부팅시 커널이 자동 업데이트 되는 이슈가 있다
+- 자동 업데이트 되면 linux-modules-extra-raspi 버전이 달라지는 이슈가 있어서 설치가 안된다
+- 뭔가 방법을 찾아서 계속 동기화를 맞춰줘야 한다 (자동 업데이트 끄기? 커널 버전 고정?)
+
+```bash
+sudo snap remove microk8s --purge
+sudo reboot
 ```
 
 ### 초기화 스크립트

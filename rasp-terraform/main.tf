@@ -10,6 +10,23 @@ provider "helm" {
   }
 }
 
+resource "helm_release" "longhorn" {
+  name             = "longhorn"
+  chart            = "${path.module}/local-charts/longhorn"
+  namespace        = "longhorn-system"
+  create_namespace = true
+
+  set {
+    name  = "defaultSettings.defaultDataPath"
+    value = "/longhorn"
+  }
+
+  set {
+    name  = "csi.kubeletRootDir"
+    value = "/var/snap/microk8s/common/var/lib/kubelet"
+  }
+}
+
 resource "helm_release" "ingress_nginx" {
   name             = "ingress-nginx"
   chart            = "${path.module}/local-charts/ingress-nginx"
@@ -50,6 +67,11 @@ resource "helm_release" "argocd" {
   chart            = "${path.module}/local-charts/argo-cd"
   namespace        = "argocd"
   create_namespace = true
+
+  set_sensitive {
+    name  = "configs.secret.argocdServerAdminPassword"
+    value = bcrypt(var.argocd_password)
+  }
 
   values = [
     file("${path.module}/local-charts/argo-cd/values-dev.yaml")

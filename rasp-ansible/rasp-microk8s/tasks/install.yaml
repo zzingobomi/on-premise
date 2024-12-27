@@ -14,11 +14,38 @@
       {% endfor %}
 
 # kenel 업데이트 가능한지 확인하기
-- name: "Install linux-modules-extra-5.15.0-1061-raspi"
+# 재부팅 후 커널이 업데이트 된거 같은데...
+# 재부팅 할때마다 다음 커널 버전 올라가네..
+# 커널 버전 어떻게 고정시키지?
+
+# - sudo nano /etc/apt/apt.conf.d/50unattended-upgrades
+# Unattended-Upgrade::AutoFixInterruptedDpkg "false";
+
+# sudo apt-mark hold raspberrypi-kernel
+# sudo apt-mark hold raspberrypi-bootloader
+
+# sudo systemctl disable unattended-upgrades
+# sudo systemctl stop unattended-upgrades
+
+# - name: "Install linux-modules-extra-5.15.0-1061-raspi"
+#   become: true
+#   ansible.builtin.apt:
+#     name: linux-modules-extra-5.15.0-1061-raspi
+#     state: present
+#     update_cache: true
+
+- name: "Install linux-modules-extra-5.15.0-1066-raspi"
   become: true
   ansible.builtin.apt:
-    name: linux-modules-extra-5.15.0-1061-raspi
+    name: linux-modules-extra-5.15.0-1066-raspi
     state: present
+    update_cache: true
+
+- name: "Install jq"
+  become: true
+  ansible.builtin.apt:
+    name: jq
+    state: latest
     update_cache: true
 
 - name: "Install ntp"
@@ -60,6 +87,10 @@
     name: iscsid
     state: restarted
     enabled: true
+
+- name: "Load iscsi_tcp module"
+  become: true
+  shell: sudo modprobe iscsi_tcp
 
 - name: Make sure snapd is installed
   become: yes
