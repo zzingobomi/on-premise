@@ -8,10 +8,21 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
+        - practice-zzingo.net
         - www.practice-zzingo.net
         - api.practice-zzingo.net
       secretName: hatongsu-tls-secret
   rules:
+    - host: practice-zzingo.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Chart.Name }}-front-cluster-ip
+                port:
+                  number: 3000
     - host: www.practice-zzingo.net
       http:
         paths:
