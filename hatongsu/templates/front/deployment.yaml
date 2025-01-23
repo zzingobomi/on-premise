@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-front-deployment
+  labels:
+    app: front
+spec:
+  replicas: {{ .Values.front.replicas }}
+  selector:
+    matchLabels:
+      app: front
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      containers:
+        - image: {{ .Values.front.image.repository }}:{{ .Values.front.image.tag }}
+          name: front-container
+          envFrom:
+            - configMapRef:
+                name: front-config-map
+            - secretRef:
+                name: front-secret
+          ports:
+            - containerPort: 3000
+          

@@ -24,6 +24,11 @@ resource "argocd_application" "hatongsu" {
     name = "hatongsu"
     namespace = "argocd"
     annotations = {
+      "argocd-image-updater.argoproj.io/hatongsu-front.allow-tags"               = "regexp:^\\d{4}-\\d{2}-\\d{2}T\\d{2}-\\d{2}-\\d{2}$"
+      "argocd-image-updater.argoproj.io/hatongsu-front.helm.image-name"          = "front.image.repository"
+      "argocd-image-updater.argoproj.io/hatongsu-front.helm.image-tag"           = "front.image.tag"
+      "argocd-image-updater.argoproj.io/hatongsu-front.update-strategy"          = "alphabetical"
+
       "argocd-image-updater.argoproj.io/hatongsu-album.allow-tags"               = "regexp:^\\d{4}-\\d{2}-\\d{2}T\\d{2}-\\d{2}-\\d{2}$"
       "argocd-image-updater.argoproj.io/hatongsu-album.helm.image-name"          = "album.image.repository"
       "argocd-image-updater.argoproj.io/hatongsu-album.helm.image-tag"           = "album.image.tag"
@@ -39,7 +44,7 @@ resource "argocd_application" "hatongsu" {
       "argocd-image-updater.argoproj.io/hatongsu-user.helm.image-tag"            = "user.image.tag"
       "argocd-image-updater.argoproj.io/hatongsu-user.update-strategy"           = "alphabetical"
 
-      "argocd-image-updater.argoproj.io/image-list"                              = "hatongsu-album=zzingo5/hatongsu-album,hatongsu-gateway=zzingo5/hatongsu-gateway,hatongsu-user=zzingo5/hatongsu-user"      
+      "argocd-image-updater.argoproj.io/image-list"                              = "hatongsu-front=zzingo5/hatongsu-front,hatongsu-album=zzingo5/hatongsu-album,hatongsu-gateway=zzingo5/hatongsu-gateway,hatongsu-user=zzingo5/hatongsu-user"      
     }
   }
 
@@ -52,6 +57,26 @@ resource "argocd_application" "hatongsu" {
       path             = "hatongsu"
 
       helm {
+        parameter {
+          name  = "front.image.tag"
+          value = var.hatongsu_values["front"].image_tag
+        }
+
+        parameter {
+          name  = "front.auth_secret"
+          value = var.hatongsu_values["front"].auth_secret
+        }
+
+        parameter {
+          name  = "front.google_client_id"
+          value = var.hatongsu_values["front"].google_client_id
+        }
+
+        parameter {
+          name  = "front.google_client_secret"
+          value = var.hatongsu_values["front"].google_client_secret
+        }
+
         parameter {
           name  = "album.image.tag"
           value = var.hatongsu_values["album"].image_tag

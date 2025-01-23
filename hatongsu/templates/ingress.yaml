@@ -1,10 +1,20 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: gateway-ingress  
+  name: hatongsu-ingress  
 spec:
   ingressClassName: nginx
   rules:
+    - host: www.practice-zzingo.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Chart.Name }}-front-cluster-ip
+                port:
+                  number: 3000
     - host: api.practice-zzingo.net
       http:
         paths:

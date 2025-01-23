@@ -12,6 +12,12 @@ variable "argocd_password" {
 
 variable "hatongsu_values" {
   type = object({
+    front = object({
+      image_tag            = string
+      auth_secret          = string
+      google_client_id     = string
+      google_client_secret = string
+    })
     album = object({
       image_tag         = string
       db_url            = string

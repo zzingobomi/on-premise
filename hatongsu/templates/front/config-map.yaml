@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: front-config-map
+data:
+  NEXT_PUBLIC_API_BASE_URL: "http://api.practice-zzingo.net"
+  NEXT_PUBLIC_MODE: "production"

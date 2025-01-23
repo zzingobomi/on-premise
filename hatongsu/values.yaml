@@ -1,3 +1,12 @@
+front:
+  replicas: 1
+  image:
+    repository: zzingo5/hatongsu-front
+    tag: latest
+  auth_secret: "auth_secret"
+  google_client_id: "google_client_id"
+  google_client_secret: "google_client_secret"
+
 album:
   replicas: 1
   image:
