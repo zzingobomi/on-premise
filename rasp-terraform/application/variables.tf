@@ -9,8 +9,7 @@ variable "hatongsu_values" {
       image_tag         = string
       db_url            = string
       rabbitmq_url      = string
-      minio_endpoint    = string
-      minio_port        = number
+      minio_endpoint    = string      
       minio_access_key  = string
       minio_secret_key  = string
       minio_bucket_name = string

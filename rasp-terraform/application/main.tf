@@ -70,12 +70,7 @@ resource "argocd_application" "hatongsu" {
         parameter {
           name  = "album.minio_endpoint"
           value = var.hatongsu_values["album"].minio_endpoint
-        }
-
-        parameter {
-          name  = "album.minio_port"
-          value = var.hatongsu_values["album"].minio_port
-        }
+        }        
 
         parameter {
           name  = "album.minio_access_key"
