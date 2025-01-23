@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-album-deployment
+  labels:
+    app: album
+spec:
+  replicas: {{ .Values.album.replicas }}
+  selector:
+    matchLabels:
+      app: album
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: album
+    spec:
+      containers:
+        - image: {{ .Values.album.image.repository }}:{{ .Values.album.image.tag }}
+          name: album-container
+          envFrom:
+            - configMapRef:
+                name: album-config-map
+            - secretRef:
+                name: album-secret
+          ports:
+            - containerPort: 4002
+          livenessProbe:
+            tcpSocket:
+              port: 4002
+            periodSeconds: 5
+          readinessProbe:
+            tcpSocket:
+              port: 4002              
+            periodSeconds: 5

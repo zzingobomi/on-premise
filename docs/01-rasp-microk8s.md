@@ -47,6 +47,17 @@ ssh <user-name>@<server-ip>
 
 위에서부터 차례대로 hori1, hori2, hori3
 
+### 커널버전(5.15.0-1061-raspi) 고정
+
+```bash
+sudo apt-mark hold linux-image-raspi
+sudo apt-mark hold linux-headers-raspi
+
+sudo apt upgrade
+
+sudo reboot
+```
+
 ### Microk8s 설치
 
 ```bash
@@ -61,6 +72,14 @@ ansible-playbook playbook.yaml -v
 curl -sSfL https://raw.githubusercontent.com/longhorn/longhorn/v1.7.2/scripts/environment_check.sh | bash
 ```
 
+### Control-plane taint 설정
+
+```bash
+kubectl describe nodes | grep Taints
+
+kubectl taint nodes hori1 node-role.kubernetes.io/control-plane=:NoSchedule
+```
+
 ### Terraform
 
 - microk8s ingress 는 생성시 자동으로 metallb의 address pool 을 가져오지 않는다. (defualt 127.0.0.1)
@@ -70,7 +89,7 @@ curl -sSfL https://raw.githubusercontent.com/longhorn/longhorn/v1.7.2/scripts/en
 ```bash
 cd rasp-terraform
 terraform init
-terraform apply -var-file=dev.tfvars -auto-approve
+terraform apply -var-file=hatongsu-prod.tfvars -auto-approve
 
 # 초기 비밀번호 확인
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-user-deployment
+  labels:
+    app: user
+spec:
+  replicas: {{ .Values.user.replicas }}
+  selector:
+    matchLabels:
+      app: user
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: user
+    spec:
+      containers:
+        - image: {{ .Values.user.image.repository }}:{{ .Values.user.image.tag }}
+          name: user-container
+          envFrom:
+            - configMapRef:
+                name: user-config-map
+            - secretRef:
+                name: user-secret
+          ports:
+            - containerPort: 4001
+          livenessProbe:
+            tcpSocket:
+              port: 4001
+            periodSeconds: 5
+          readinessProbe:
+            tcpSocket:
+              port: 4001              
+            periodSeconds: 5

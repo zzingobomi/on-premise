@@ -100,5 +100,5 @@ module "application" {
   source = "./application"
 
   argocd_password = var.argocd_password
-  delivery_values = var.delivery_values  
+  hatongsu_values = var.hatongsu_values  
 }

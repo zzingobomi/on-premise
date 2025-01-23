@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gateway-ingress  
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api.practice-zzingo.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Chart.Name }}-gateway-cluster-ip
+                port:
+                  number: 4000
+          

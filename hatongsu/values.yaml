@@ -1,0 +1,31 @@
+album:
+  replicas: 1
+  image:
+    repository: zzingo5/hatongsu-album
+    tag: latest
+  db_url: "postgresql://foo:bar@example.com:5432/album"
+  rabbitmq_url: "amqp://guest:guest@rabbitmq:5672/"
+  minio_endpoint: "minio:9000"
+  minio_port: 9000
+  minio_access_key: "minio"
+  minio_secret_key: "minio123"
+  minio_bucket_name: "album"
+
+gateway:
+  replicas: 1
+  image:
+    repository: zzingo5/hatongsu-gateway
+    tag: latest
+  album_rabbitmq_url: "amqp://guest:guest@rabbitmq:5672/"
+
+user:
+  replicas: 1
+  image:
+    repository: zzingo5/hatongsu-user
+    tag: latest
+  db_url: "postgresql://foo:bar@example.com:5432/user"
+  access_token_secret: "access_token_secret"
+  refresh_token_secret: "refresh_token_secret"
+  token_expire_time: "3600h"
+  google_client_id: "google_client_id"
+  google_client_secret: "google_client_secret"
