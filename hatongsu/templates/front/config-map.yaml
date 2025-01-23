@@ -5,4 +5,4 @@ metadata:
 data:
   NEXT_PUBLIC_API_BASE_URL: "http://api.practice-zzingo.net"
   NEXT_PUBLIC_MODE: "production"
-  AUTH_TRUST_HOST: "true"
+  AUTH_TRUST_HOST: "http://www.practice-zzingo.net"
