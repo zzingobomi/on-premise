@@ -96,6 +96,17 @@ resource "helm_release" "argo_rollouts" {
   create_namespace = true
 }
 
+resource "helm_release" "cert_manager" {
+  name             = "cert-manager"
+  chart            = "${path.module}/local-charts/cert-manager"
+  namespace        = "cert-manager"
+  create_namespace = true
+
+  values = [
+    file("${path.module}/local-charts/cert-manager/values-dev.yaml")
+  ]
+}
+
 module "application" {
   source = "./application"
 

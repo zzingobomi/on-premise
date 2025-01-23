@@ -1,9 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hatongsu-ingress  
+  name: hatongsu-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - www.practice-zzingo.net
+        - api.practice-zzingo.net
+      secretName: hatongsu-tls-secret
   rules:
     - host: www.practice-zzingo.net
       http:
