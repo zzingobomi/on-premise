@@ -10,6 +10,7 @@ spec:
     kind: ClusterIssuer
   commonName: practice-zzingo.net
   dnsNames:
+    - practice-zzingo.net
     - www.practice-zzingo.net
     - api.practice-zzingo.net
   acme:
