@@ -4,6 +4,6 @@ metadata:
   name: gateway-config-map
 data:
   HTTP_PORT: "4000"
-  FRONTEND_URL: "http://www.practice-zzingo.net"
+  FRONTEND_URL: "https://www.practice-zzingo.net"
   USER_GRPC_URL: "{{ .Chart.Name }}-user-cluster-ip:4001"
   ALBUM_GRPC_URL: "{{ .Chart.Name }}-album-cluster-ip:4002"
