@@ -4,6 +4,7 @@ metadata:
   name: hatongsu-ingress
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
 spec:
   ingressClassName: nginx
   tls:
