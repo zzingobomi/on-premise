@@ -4,3 +4,4 @@ metadata:
   name: front-config-map
 data:
   AUTH_TRUST_HOST: "https://www.practice-zzingo.net"
+  NEXTAUTH_URL: "https://www.practice-zzingo.net"
