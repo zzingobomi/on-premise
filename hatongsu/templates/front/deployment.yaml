@@ -22,9 +22,7 @@ spec:
       containers:
         - image: {{ .Values.front.image.repository }}:{{ .Values.front.image.tag }}
           name: front-container
-          envFrom:
-            - configMapRef:
-                name: front-config-map
+          envFrom:            
             - secretRef:
                 name: front-secret
           ports:
