@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: front-config-map
 data:
-  AUTH_TRUST_HOST: "http://www.practice-zzingo.net"
+  AUTH_TRUST_HOST: "https://www.practice-zzingo.net"
